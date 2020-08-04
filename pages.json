@@ -8,9 +8,9 @@
 		}
     ],
 	"globalStyle": {
-		"navigationBarTextStyle": "black",
+		"navigationBarTextStyle": "#000000",
 		"navigationBarTitleText": "每日影视排行",
-		"navigationBarBackgroundColor": "#F8F8F8",
+		"navigationBarBackgroundColor": "#1989fa",
 		"backgroundColor": "#F8F8F8"
 	}
 }

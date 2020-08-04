@@ -1,7 +1,9 @@
 <template>
 	<view class="content">
-		<view class="time-title">
-			{{currentDate}}影视排行
+		<view class="time-box">
+			<view class="time-title">
+				昨日：{{currentDate}}影视排行
+			</view>
 		</view>
 		<view v-if="bottomNavIndex === 1" class="header-nav">
 			<view  :class="[topNavIndex === 1 ? 'active' : '', 'header-nav__item']" @click=handleTopNav(1)>
@@ -12,50 +14,67 @@
 			</view>
 		</view>
 		<view v-else-if="bottomNavIndex === 2" class="header-nav">
-			<view :class="[topNavIndex === 1 ? 'active' : '', 'header-nav__item']" @click=handleTopNav(1)>
+			<view :class="[topNavIndex === 1 ? 'active' : '', 'header-nav__item',  topNavIndex === 3 ? 'bd-right' : '']" @click=handleTopNav(1)>
 				<text class="header-nav__txt">全部</text>
 			</view>
 			<view :class="[topNavIndex === 2 ? 'active' : '', 'header-nav__item']" @click=handleTopNav(2)>
 				<text class="header-nav__txt">网剧</text>
 			</view>
-			<view :class="[topNavIndex === 3 ? 'active' : '', 'header-nav__item']" class="header-nav__item" @click=handleTopNav(3)>
+			<view :class="[topNavIndex === 3 ? 'active' : '', 'header-nav__item', topNavIndex === 1 ? 'bd-left' : '']" class="header-nav__item" @click=handleTopNav(3)>
 				<text class="header-nav__txt">电视剧</text>
 			</view>
 		</view>
 		<view v-else-if="bottomNavIndex === 3" class="header-nav">
-			<view :class="[topNavIndex === 1 ? 'active' : '', 'header-nav__item']" @click=handleTopNav(1)>
+			<view :class="[topNavIndex === 1 ? 'active' : '', 'header-nav__item',  topNavIndex === 3 ? 'bd-right' : '']" @click=handleTopNav(1)>
 				<text class="header-nav__txt">全部</text>
 			</view>
 			<view :class="[topNavIndex === 2 ? 'active' : '', 'header-nav__item']" @click=handleTopNav(2)>
 				<text class="header-nav__txt">网络综艺</text>
 			</view>
-			<view :class="[topNavIndex === 3 ? 'active' : '', 'header-nav__item']" class="header-nav__item" @click=handleTopNav(3)>
+			<view :class="[topNavIndex === 3 ? 'active' : '', 'header-nav__item', topNavIndex === 1 ? 'bd-left' : '']" class="header-nav__item" @click=handleTopNav(3)>
 				<text class="header-nav__txt">电视综艺</text>
 			</view>
 		</view>
 		<view class="media-list">
-			<view class="media-item__header">
+<!-- 			<view class="media-item__header">
 				<text class="media-item media-item__rank">排行</text>
 				<text class="media-item media-item__name">剧名</text>
 				<text class="media-item media-item__score">单日播放</text>
 				<text class="media-item media-item__hot">总播放</text>
-			</view>
+			</view> -->
 			<view class="media-item__body" v-for="(item,index) in list" :key="index">
 				<text class="media-item media-item__rank">{{item.rank}}</text>
-				<text class="media-item media-item__name">{{item.name}}</text>
-				<text class="media-item media-item__score" v-if="item.attachData">{{Number.parseInt(item.attachData/10000)}}万</text>
-				<text class="media-item media-item__score" v-else>{{item.gdi}}</text>
-				<text class="media-item media-item__hot">{{setPlayCount(item.totalPlayCount)}}</text>
+				<view class="media-item media-item__name">
+					<text class="media-item__name-strong">
+						{{item.name}}
+					</text>
+					<text class="media-item__on-day">
+						上映{{item.days}}天
+					</text>
+				</view>
+				<view class="media-item__play">
+					<text class="media-item media-item__score" v-if="item.attachData">{{setPlayCount(item.attachData)}}</text>
+					<text class="media-item media-item__score" v-else>统计中</text>
+					<text class="media-item__bottom-tip">
+						单日播放
+					</text>
+				</view>
+				<view class="media-item__play media-item__total-play">
+					<text class="media-item media-item__score">{{setPlayCount(item.totalPlayCount)}}</text>
+					<text class="media-item__bottom-tip">
+						总播放
+					</text>
+				</view>
 			</view>
 		</view>
 		<view class="bottom-nav">
-			<view :class="['bottom-nav__item', bottomNavIndex === 1 ? 'active' : '']" @click=handleBottomNav(1)>
-				<view class="bottom-nav__icon"></view>
-				<text class="bottom-nav__txt">电影</text>
-			</view>
 			<view :class="['bottom-nav__item', bottomNavIndex === 2 ? 'active' : '']" @click=handleBottomNav(2)>
 				<view class="bottom-nav__icon"></view>
 				<text class="bottom-nav__txt">电视剧</text>
+			</view>
+			<view :class="['bottom-nav__item', bottomNavIndex === 1 ? 'active' : '']" @click=handleBottomNav(1)>
+				<view class="bottom-nav__icon"></view>
+				<text class="bottom-nav__txt">电影</text>
 			</view>
 			<view :class="['bottom-nav__item', bottomNavIndex === 3 ? 'active' : '']" @click=handleBottomNav(3)>
 				<view class="bottom-nav__icon"></view>
@@ -72,7 +91,7 @@
 				title: 'Hello',
 				src: '',
 				topNavIndex: 1,
-				bottomNavIndex: 1,
+				bottomNavIndex: 2,
 				typeList: {
 					1: 'MOVIE', // 院线电影
 					2: 'NETWORK_MOVIE', // 网络电影
@@ -101,13 +120,12 @@
 				this.clearAllStorage()
 				this.setStorage('currentDate', this.currentDate)
 			}
-			this.getListByType(1)
+			this.getListByType(3)
 		},
 		methods: {
 			setPlayCount(num) {
-
 				if (num == 0) {
-					return '暂无数据'
+					return '统计中'
 				} else if (parseFloat(num) >= 100000000) {
 					return parseFloat(num/100000000).toFixed(2) + '亿'
 				} else {
@@ -132,6 +150,10 @@
 				this.topNavIndex = 1;
 				this.bottomNavIndex = index;
 				this.handlerClickData();
+				uni.pageScrollTo({
+				scrollTop: 0,
+				duration: 200
+				});
 			},
 			handlerClickData() {
 				let _type = 0;
@@ -180,7 +202,7 @@
 					newParms.orderTitle = 'gdi'
 				}
 				let _storage = this.getStorage(parms.category)
-				if(_storage) {
+				if(_storage && _storage.length > 0) {
 					this.list = _storage
 				} else {
 					uni.request({
@@ -202,18 +224,42 @@
 		display: flex;
 		flex-direction: row;
 		width: 80%;
-		margin: 50rpx auto 0 auto;
+		margin: 50rpx auto 65rpx auto;
+		border-radius: 15rpx;
 		&__item{
 			flex: 1;
 			text-align: center;
-			font-size: 36rpx;
+			font-size: 30rpx;
 			position: relative;
-			line-height: 70rpx;
+			line-height: 60rpx;
 			border: 1rpx solid #d9d9d9;
+			border-left: none;
+			border-right: none;
+			&:nth-last-child(1){
+				border-right: 1rpx solid #d9d9d9;
+				border-radius: 0rpx 15rpx 15rpx 0;
+			}
+			&:nth-child(1){
+				border-left: 1rpx solid #d9d9d9;
+				border-radius: 15rpx 0 0 15rpx;
+			}
+			// &:nth-child(2){
+			// 	border-right: 1rpx solid #d9d9d9;
+			// 	border-left: 1rpx solid #d9d9d9;
+			// }
+			// border-right: none;
 			&.active{
-				background-color: #F63636;
+				background-color: #1989fa;
 				color: #fff;
-				border: 1rpx solid #F63636;
+				border: none;
+				position: relative;
+				z-index: 9;
+			}
+			&.bd-left{
+				border-left: 1rpx solid #d9d9d9;
+			}
+			&.bd-right{
+				border-right: 1rpx solid #d9d9d9;
 			}
 		}
 	}
@@ -221,16 +267,17 @@
 		position: fixed;
 		left: 0;
 		bottom: 0;
-		height: 128rpx;
 		width: 100%;
 		background:rgba(255,255,255,1);
 		box-shadow:0px 1px 0px 0px rgba(217,217,217,1);
 		display: flex;
 		border-top: 1px solid #d9d9d9;
 		&__item{
+			height: 94rpx;
 			flex: 1;
 			display: flex;
 			flex-direction: column;
+			justify-content: space-around;
 			align-items: center;
 			text-align: center;
 			&:nth-of-type(1) {
@@ -253,7 +300,7 @@
 			}
 			&.active{
 				.bottom-nav__txt{
-					color:#F63636;
+					color:#1989fa;
 				}
 				&:nth-of-type(1) {
 					.bottom-nav__icon{
@@ -276,20 +323,22 @@
 			}
 		}
 		&__icon{
-			width: 45rpx;	
-			height: 45rpx;
-			margin: 13rpx 0 12rpx 0;
+			width: 40rpx;	
+			height: 40rpx;
+			margin: 5rpx 0 0rpx 0;
 		}
 		&__txt{
-			font-size: 32rpx;
-			color:#999;
+			font-size: 30rpx;
+			line-height: 40rpx;
+			color:#646566;
+			
 		}
 	}
 	.media{
 		&-list{
 			display: flex;
 			flex-direction: column;
-			width: 96%;
+			width: 90%;
 			margin: 10px auto 180rpx auto;
 		}
 		&-item{
@@ -298,26 +347,56 @@
 			margin: 15rpx 0;
 			box-sizing: border-box;
 			padding: 0 5rpx;
+			&__body{
+				border-bottom: 1px solid #f0f0f0;
+				padding: 10rpx 0;
+				&:nth-child(1){
+					border-top: 1px solid #f0f0f0;
+				}
+			}
 			&__rank{
-				width: 15%;
+				width: 10%;
 			}
 			&__name{
-				width: 40%;
+				width: 30%;
 				text-align: left;
-				overflow: hidden;
-				text-overflow: ellipsis;
-				white-space: nowrap;
+				// overflow: hidden;
+				// text-overflow: ellipsis;
+				// white-space: nowrap;
+				display: flex;
+				flex-direction: column;
 				padding: 0 10rpx;
 				box-sizing: border-box;
 			}
-			&__score{
-				width: 20%;
-			}
 			&__hot{
-				width: 25%;
+				width: 30%;
+				text-align: right;
+			}
+			&__name-strong{
+				font-weight: bold;
+				color: #313131;
+				margin: 0  0 15rpx 0;
+			}
+			&__on-day{
+				color: #9a9a9a;
+				font-size: 28rpx;
+			}
+			&__score{
 				text-align: right;
 				font-weight: bold;
-				color: #F63636;
+			}
+			&__play{
+				display: flex;
+				flex-direction: column;
+				width: 30%;
+				text-align: right;
+			}
+			&__total-play{
+				width: 30%;
+			}
+			&__bottom-tip{
+				color: #9a9a9a;
+				font-size: 28rpx;
 			}
 		}
 		&-item__body{
@@ -338,9 +417,20 @@
 			color: #000;
 		}
 	}
-	.time-title{
+	.time-box{
+		background-color: #1989fa;
+		color: #fff;
+		font-size: 32rpx;
 		width: 100%;
 		text-align: center;
-		margin: 15px 0 0 0;
+		padding: 8px 0 0 0;
+	}
+	.time-title{
+		background-color: #fff;
+		width: 60%;
+		color: #666;
+		padding: 20rpx 0;
+		border-radius: 15rpx 15rpx 0 0;
+		margin: 0 auto 0rpx auto;
 	}
 </style>
