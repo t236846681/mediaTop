@@ -165,6 +165,9 @@
 			flex-direction: row;
 			align-items: center;
 		}
+		&__label{
+			white-space: nowrap;
+		}
 		&__value{
 			display: flex;
 		}
