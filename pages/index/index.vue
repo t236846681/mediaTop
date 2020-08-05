@@ -6,7 +6,7 @@
 			</view>
 		</view>
 		<view v-if="bottomNavIndex === 1" class="header-nav">
-			<view  :class="[topNavIndex === 1 ? 'active' : '', 'header-nav__item']" @click=handleTopNav(1)>
+			<view :class="[topNavIndex === 1 ? 'active' : '', 'header-nav__item']" @click=handleTopNav(1)>
 				<text class="header-nav__txt">院线</text>
 			</view>
 			<view :class="[topNavIndex === 2 ? 'active' : '', 'header-nav__item']" class="header-nav__item" @click=handleTopNav(2)>
@@ -42,7 +42,7 @@
 				<text class="media-item media-item__score">单日播放</text>
 				<text class="media-item media-item__hot">总播放</text>
 			</view> -->
-			<view class="media-item__body" v-for="(item,index) in list" :key="index">
+			<view class="media-item__out media-item__body" @click="goDetail(item.showId)" v-for="(item,index) in list" :key="index">
 				<text class="media-item media-item__rank">{{item.rank}}</text>
 				<view class="media-item media-item__name">
 					<text class="media-item__name-strong">
@@ -123,6 +123,11 @@
 			this.getListByType(3)
 		},
 		methods: {
+			goDetail(id){
+				uni.navigateTo({                
+				  url:'/pages/detail/index?id=' + id
+				})
+			},
 			setPlayCount(num) {
 				if (num == 0) {
 					return '统计中'
@@ -214,6 +219,13 @@
 						}
 					});
 				}
+			},
+			onShareAppMessage: function(e) {
+				let title = `点击查看${this.currentDate}影视剧排行`
+				return {
+					title: title,
+					path: 'pages/index/index'
+				}
 			}
 		},
 	}
@@ -248,6 +260,9 @@
 			// 	border-left: 1rpx solid #d9d9d9;
 			// }
 			// border-right: none;
+			&__link{
+				width: 100%;
+			}
 			&.active{
 				background-color: #1989fa;
 				color: #fff;

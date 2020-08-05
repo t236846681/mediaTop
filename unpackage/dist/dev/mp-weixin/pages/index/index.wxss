@@ -30,6 +30,9 @@
   border-left: 1rpx solid #d9d9d9;
   border-radius: 15rpx 0 0 15rpx;
 }
+.header-nav__item__link {
+  width: 100%;
+}
 .header-nav__item.active {
   background-color: #1989fa;
   color: #fff;

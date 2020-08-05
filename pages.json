@@ -5,7 +5,15 @@
 			"style": {
 				"navigationBarTitleText": "每日影视排行"
 			}
+		},
+		
+		{
+			"path": "pages/detail/index",
+			"style": {
+				"navigationBarTitleText": "影视详情"
+			}
 		}
+
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "#000000",

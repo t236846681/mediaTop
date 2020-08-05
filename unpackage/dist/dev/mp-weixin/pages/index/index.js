@@ -278,6 +278,11 @@ var _default =
     this.getListByType(3);
   },
   methods: {
+    goDetail: function goDetail(id) {
+      uni.navigateTo({
+        url: '/pages/detail/index?id=' + id });
+
+    },
     setPlayCount: function setPlayCount(num) {
       if (num == 0) {
         return '统计中';
@@ -369,6 +374,13 @@ var _default =
           } });
 
       }
+    },
+    onShareAppMessage: function onShareAppMessage(e) {
+      var title = "\u70B9\u51FB\u67E5\u770B".concat(this.currentDate, "\u5F71\u89C6\u5267\u6392\u884C");
+      return {
+        title: title,
+        path: 'pages/index/index' };
+
     } } };exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
 
